@@ -13,6 +13,8 @@ Requirements:
 
 2. Copy the "include" and "common" directories to a local location
    Point to this location in the Makefile as TEENSY3X_BASEPATH
+   Alternately:
+   Keep the directories in the pwd and set the TEENSH3X_BASEPATH to the present working directory
 
 Example Commands:
 -Compile:
