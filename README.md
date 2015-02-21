@@ -15,7 +15,7 @@ http://elegantcircuits.com/2015/02/03/bare-metal-programming-the-teensy-3-1-arm-
  * Set <TT>TOOLPATH</TT> in the Makefile to the Teensy directory where the <TT>arm-none-eabi</TT> binaries live.
  * Set <TT>TEENSY3X_BASEPATH</TT> to the location of the "<TT>include</TT>" and "<TT>common</TT>" directories.   
        Alternately:    
-       Keep the directories in the <TT>pwd</TT> and set the <TT>TEENSH3X_BASEPATH</TT> to the present working directory
+       Keep the directories in the <TT>pwd</TT> and set the <TT>TEENSY3X_BASEPATH</TT> to the present working directory
 
 ##Example Commands:##
 * Compile: <TT>$make all</TT>
