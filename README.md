@@ -10,7 +10,7 @@ http://elegantcircuits.com/2015/02/03/bare-metal-programming-the-teensy-3-1-arm-
 
 ##Installation:##
 * Install the Arduino IDE and the Teensyduino Plugin. 
-* Copy the "include" and "common" directories from this template to a local location. 
+* Copy the "<TT>include</TT" and "common" directories from this template to a local location. 
 * Edit the Makefile: 
  * Set TOOLPATH in the Makefile to the Teensy directory where the arm-none-eabi binaries live.
  * Set TEENSY3X_BASEPATH to the location of the "include" and "common" directories.   
