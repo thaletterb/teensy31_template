@@ -13,9 +13,9 @@ http://elegantcircuits.com/2015/02/03/bare-metal-programming-the-teensy-3-1-arm-
 * Copy the "include" and "common" directories from this template to a local location. 
 * Edit the Makefile: 
  * Set TOOLPATH in the Makefile to the Teensy directory where the arm-none-eabi binaries live.
- * Set TEENSY3X_BASEPATH to the location of the "include" and "common" directories.
-   Alternately:
-   Keep the directories in the pwd and set the TEENSH3X_BASEPATH to the present working directory
+ * Set TEENSY3X_BASEPATH to the location of the "include" and "common" directories.   
+       Alternately:    
+       Keep the directories in the pwd and set the TEENSH3X_BASEPATH to the present working directory
 
 ##Example Commands:##
 * Compile: $make all
