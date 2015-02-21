@@ -9,13 +9,12 @@ http://elegantcircuits.com/2015/02/03/bare-metal-programming-the-teensy-3-1-arm-
 * Teensy 3.1 development board
 
 ##Installation:##
-1. Install the Arduino IDE and the Teensyduino Plugin
-   Point the TOOLPATH in the Makefile to the directory Teensy directory where the arm-none-eabi binaries live
-
-2. Copy the "include" and "common" directories to a local location
-   Point to this location in the Makefile as TEENSY3X_BASEPATH
-   Alternately:
-   Keep the directories in the pwd and set the TEENSH3X_BASEPATH to the present working directory
+* Install the Arduino IDE and the Teensyduino Plugin. 
+  Point the TOOLPATH in the Makefile to the Teensy directory where the arm-none-eabi binaries live.
+* Copy the "include" and "common" directories to a local location. 
+ Point to this location in the Makefile as TEENSY3X_BASEPATH. 
+ Alternately:
+ Keep the directories in the pwd and set the TEENSH3X_BASEPATH to the present working directory
 
 ##Example Commands:##
 * Compile: $make all
