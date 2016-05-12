@@ -1,5 +1,23 @@
+#  Teensy 3.1 Project Makefile
+#  Karl Lunt
+#  with modifications by Kevin Cuzner
+#  and Brian V 
+#  
+#  5/11/16:
+#  	- Add project directory structure:
+#  		- Implemented making all .o files in .obj subdir
+#  5/15/15:
+#  	- First working build. 
+#  		- Changed TOOLPATH, BASEPATH and TEENSYDIR to point to appropriate local locations
+#
+
 #  Project Name
 PROJECT=blinky
+
+#  Project directory structure
+SRCDIR = src
+OUTPUTDIR = bin
+OBJDIR = obj
 
 #  Type of CPU/MCU in target hardware
 CPU = cortex-m4
@@ -10,9 +28,9 @@ CPU = cortex-m4
 #  You will need as a minimum your $(PROJECT).o file.
 #  You will also need code for startup (following reset) and
 #  any code needed to get the PLL configured.
-OBJECTS	= $(PROJECT).o \
-	      sysinit.o \
-	      crt0.o
+OBJECTS	+= $(PROJECT).o \
+	       sysinit.o \
+	       crt0.o
 
 #  Select the toolchain by providing a path to the top level
 #  directory; this will be the folder that holds the
@@ -134,7 +152,8 @@ $(PROJECT).hex: $(PROJECT).elf
 
 #  Linker invocation
 $(PROJECT).elf: $(OBJECTS)
-	$(LD) $(OBJECTS) $(LDFLAGS) -o $(PROJECT).elf
+	#$(LD) $(OBJDIR)/$(OBJECTS) $(LDFLAGS) -o $(PROJECT).elf
+	$(LD) $(OBJDIR)/*.o $(LDFLAGS) -o $(PROJECT).elf
 
 
 stats: $(PROJECT).elf
@@ -151,7 +170,7 @@ load: $(PROJECT).elf
 	$(TEENSYDIR)/tools/teensy_reboot
 
 clean:
-	$(REMOVE) *.o
+	$(REMOVE) $(OBJDIR)/*.o
 	$(REMOVE) $(PROJECT).hex
 	$(REMOVE) $(PROJECT).elf
 	$(REMOVE) $(PROJECT).map
@@ -186,7 +205,7 @@ toolvers:
 .c.o :
 	@echo Compiling $<, writing to $@...
 #	$(CC) $(GCFLAGS) -c $< -o $@ > $(basename $@).lst
-	$(CC) $(GCFLAGS) -c $< -o $@ 2>&1 | sed -e 's/\(\w\+\):\([0-9]\+\):/\1(\2):/'
+	$(CC) $(GCFLAGS) -c $< -o $(OBJDIR)/$@ 2>&1 | sed -e 's/\(\w\+\):\([0-9]\+\):/\1(\2):/'
     
 .cpp.o :
 	@echo Compiling $<, writing to $@...
@@ -201,6 +220,6 @@ toolvers:
 .s.o :
 	@echo Assembling $<, writing to $@...
 #	$(AS) $(ASFLAGS) -o $@ $<  > $(basename $@).lst
-	$(AS) $(ASFLAGS) -o $@ $<  2>&1 | sed -e 's/\(\w\+\):\([0-9]\+\):/\1(\2):/'
+	$(AS) $(ASFLAGS) -o $(OBJDIR)/$@ $<  2>&1 | sed -e 's/\(\w\+\):\([0-9]\+\):/\1(\2):/'
 #########################################################################
 

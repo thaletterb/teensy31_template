@@ -39,7 +39,7 @@ int  main(void)
     while (1)
     {
         LED2_ON;
-        for (n=0; n<1000000; n++)  ;	// dumb delay
+        for (n=0; n<8000000; n++)  ;	// dumb delay
         mask = 0x80;
         while (mask != 0)
         {
