@@ -10,6 +10,7 @@
 #  	- First working build. 
 #  		- Changed TOOLPATH, BASEPATH and TEENSYDIR to point to appropriate local locations
 #
+platform=$(shell uname)
 
 #  Project Name
 PROJECT=blinky
@@ -35,9 +36,14 @@ OBJECTS	+= $(PROJECT).o \
 #  Select the toolchain by providing a path to the top level
 #  directory; this will be the folder that holds the
 #  arm-none-eabi subfolders.
-#  BV - Change this to local toolchain directory
 #  Default: TOOLPATH = /home/brian/arduino-1.0.6/arduino-1.0.6/hardware/tools
+ifeq ($(platform),Linux)
 TOOLPATH = /home/brian/arduino-1.0.6/arduino-1.0.6/hardware/tools/arm-none-eabi
+endif
+
+ifeq ($(platform),Darwin)
+TOOLPATH = /Applications/Arduino.app/Contents/Resources/Java/hardware/tools/gcc-arm-none-eabi-4.8.3-2014q1
+endif
 
 #  Provide a base path to your Teensy firmware release folder.
 #  This is the folder containing all of the Teensy source and
@@ -45,13 +51,25 @@ TOOLPATH = /home/brian/arduino-1.0.6/arduino-1.0.6/hardware/tools/arm-none-eabi
 #  example folders (such as common or include) and place them
 #  here.
 #  BV - Change this to the local basepath directory, where the common and include files live
+ifeq ($(platform),Linux)
 TEENSY3X_BASEPATH = /home/brian/Projects/teensy/teensy31/teensy_basepath
+endif
+
+ifeq ($(platform),Darwin)
+TEENSY3X_BASEPATH = /Users/brianvuong/scratch/teensy/teensy_basepath
+endif
 
 #
 # SOME ADDITIONAL TEENSY VARS
 # BV 2/2/15
 #
+ifeq ($(platform),Linux)
 TEENSYDIR = /home/brian/arduino-1.0.6/arduino-1.0.6/hardware
+endif
+
+ifeq ($(platform),Darwin)
+TEENSYDIR = /Applications/Arduino.app/Contents/Resources/Java/hardware
+endif
 
 #  Select the target type.  This is typically arm-none-eabi.
 #  If your toolchain supports other targets, those target
