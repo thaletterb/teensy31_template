@@ -3,6 +3,16 @@
 #  with modifications by Kevin Cuzner
 #  and Brian V 
 #  
+#  5/13/16:
+#  	- Add platform conditionals for Linux and Mac
+#  	- Continue project directory structure:
+#  		- All .hex, .elf, .map files get put into OUTPUTDIR
+#  	- Remove redundant files in include directory
+#  		- Now used for project .h files
+#  		- teensy include files are pointed to by TEENSYPATH
+#  	- Remove 'common' directory. Pointed to with TEENSYPATH
+#  	- Add 'src' directory to VPATH
+#
 #  5/11/16:
 #  	- Add project directory structure:
 #  		- Implemented making all .o files in .obj subdir
@@ -50,7 +60,6 @@ endif
 #  include folders.  For example, you would expand any Freescale
 #  example folders (such as common or include) and place them
 #  here.
-#  BV - Change this to the local basepath directory, where the common and include files live
 ifeq ($(platform),Linux)
 TEENSY3X_BASEPATH = /home/brian/Projects/teensy/teensy31/teensy_basepath
 endif
@@ -59,10 +68,6 @@ ifeq ($(platform),Darwin)
 TEENSY3X_BASEPATH = /Users/brianvuong/scratch/teensy/teensy_basepath
 endif
 
-#
-# SOME ADDITIONAL TEENSY VARS
-# BV 2/2/15
-#
 ifeq ($(platform),Linux)
 TEENSYDIR = /home/brian/arduino-1.0.6/arduino-1.0.6/hardware
 endif
@@ -90,11 +95,13 @@ GCC_INC          = $(TOOLPATH)/$(TARGETTYPE)/include
 #  source files outside of the working directory.  If you need more
 #  than one directory, separate their paths with ':'.
 VPATH = $(TEENSY3X_BASEPATH)/common
+VPATH += :./src
 
 				
 #  List of directories to be searched for include files during compilation
 INCDIRS  = -I$(GCC_INC)
 INCDIRS += -I$(TEENSY3X_INC)
+INCDIRS += -I./include
 INCDIRS += -I.
 
 
@@ -130,7 +137,7 @@ ASFLAGS = -mcpu=$(CPU)
 
 
 #  Linker options
-LDFLAGS  = -nostdlib -nostartfiles -Map=$(PROJECT).map -T$(LSCRIPT)
+LDFLAGS  = -nostdlib -nostartfiles -Map=$(OUTPUTDIR)/$(PROJECT).map -T$(LSCRIPT)
 LDFLAGS += --cref
 LDFLAGS += $(LIBDIRS)
 LDFLAGS += $(LIBS)
@@ -163,36 +170,35 @@ REMOVE = rm -f
 all:: $(PROJECT).hex $(PROJECT).bin stats dump
 
 $(PROJECT).bin: $(PROJECT).elf
-	$(OBJCOPY) -O binary -j .text -j .data $(PROJECT).elf $(PROJECT).bin
+	$(OBJCOPY) -O binary -j .text -j .data $(OUTPUTDIR)/$(PROJECT).elf $(OUTPUTDIR)/$(PROJECT).bin
 
 $(PROJECT).hex: $(PROJECT).elf
-	$(OBJCOPY) -R .stack -O ihex $(PROJECT).elf $(PROJECT).hex
+	$(OBJCOPY) -R .stack -O ihex $(OUTPUTDIR)/$(PROJECT).elf $(OUTPUTDIR)/$(PROJECT).hex
 
 #  Linker invocation
 $(PROJECT).elf: $(OBJECTS)
-	#$(LD) $(OBJDIR)/$(OBJECTS) $(LDFLAGS) -o $(PROJECT).elf
-	$(LD) $(OBJDIR)/*.o $(LDFLAGS) -o $(PROJECT).elf
+	$(LD) $(OBJDIR)/*.o $(LDFLAGS) -o $(OUTPUTDIR)/$(PROJECT).elf
 
 
 stats: $(PROJECT).elf
-	$(SIZE) $(PROJECT).elf
+	$(SIZE) $(OUTPUTDIR)/$(PROJECT).elf
 	
 dump: $(PROJECT).elf
-	$(OBJDUMP) -h $(PROJECT).elf	
+	$(OBJDUMP) -h $(OUTPUTDIR)/$(PROJECT).elf	
 
 program:: $(PROJECT).hex $(PROJECT).bin stats dump load
 
 load: $(PROJECT).elf
-	$(OBJCOPY) -O ihex -R .eeprom $(PROJECT).elf $(PROJECT).hex
-	$(TEENSYDIR)/tools/teensy_post_compile -file=$(PROJECT) -path=$(shell pwd) -tools=$(TEENSYDIR)/tools
+	$(OBJCOPY) -O ihex -R .eeprom $(OUTPUTDIR)/$(PROJECT).elf $(OUTPUTDIR)/$(PROJECT).hex
+	$(TEENSYDIR)/tools/teensy_post_compile -file=$(OUTPUTDIR)/$(PROJECT) -path=$(shell pwd) -tools=$(TEENSYDIR)/tools
 	$(TEENSYDIR)/tools/teensy_reboot
 
 clean:
 	$(REMOVE) $(OBJDIR)/*.o
-	$(REMOVE) $(PROJECT).hex
-	$(REMOVE) $(PROJECT).elf
-	$(REMOVE) $(PROJECT).map
-	$(REMOVE) $(PROJECT).bin
+	$(REMOVE) $(OUTPUTDIR)/$(PROJECT).hex
+	$(REMOVE) $(OUTPUTDIR)/$(PROJECT).elf
+	$(REMOVE) $(OUTPUTDIR)/$(PROJECT).map
+	$(REMOVE) $(OUTPUTDIR)/$(PROJECT).bin
 	$(REMOVE) *.lst
 
 #  The toolvers target provides a sanity check, so you can determine

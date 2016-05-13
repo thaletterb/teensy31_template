@@ -11,6 +11,7 @@
  */
 
 #include  "common.h"
+#include "test_include.h"
 
 #define  LED_ON     GPIOC_PSOR=(1<<5)
 #define  LED_OFF    GPIOC_PCOR=(1<<5)

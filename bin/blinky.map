@@ -8,14 +8,13 @@ flash            0x0000000000000000 0x0000000000040000 xr
 
 Linker script and memory map
 
-LOAD obj/blinky.o
 LOAD obj/crt0.o
 LOAD obj/sysinit.o
                 0x0000000000002004                TOTAL_RESERVED_STACK = 0x2004
                 0x0000000020008000                _top_stack = 0x20008000
                 0x0000000000000000                TOTAL_RESERVED_HEAP = 0x0
 
-.text           0x0000000000000000      0x9b4
+.text           0x0000000000000000      0x8d4
  CREATE_OBJECT_SYMBOLS
                 0x0000000000000000                __interrupt_vector_table = .
  *(.interrupt_vector_table)
@@ -131,61 +130,58 @@ LOAD obj/sysinit.o
                 0x000000000000049e                PIT0_IRQHandler
                 0x000000000000049e                Reserved68_IRQHandler
  *(.text)
- .text          0x00000000000004c4       0xe0 obj/blinky.o
-                0x00000000000004c4                main
- .text          0x00000000000005a4        0x0 obj/crt0.o
- .text          0x00000000000005a4      0x410 obj/sysinit.o
-                0x00000000000005a4                start
-                0x00000000000005b4                sysinit
-                0x0000000000000688                pll_init
-                0x0000000000000984                wdog_disable
+ .text          0x00000000000004c4        0x0 obj/crt0.o
+ .text          0x00000000000004c4      0x410 obj/sysinit.o
+                0x00000000000004c4                start
+                0x00000000000004d4                sysinit
+                0x00000000000005a8                pll_init
+                0x00000000000008a4                wdog_disable
  *(.text.*)
  *(.glue_7)
  .glue_7        0x0000000000000000        0x0 linker stubs
  *(.glue_7t)
  .glue_7t       0x0000000000000000        0x0 linker stubs
-                0x00000000000009b4                . = ALIGN (0x4)
+                0x00000000000008d4                . = ALIGN (0x4)
  *(.rodata)
  *(.rodata*)
  *(.init)
  *(.fini)
-                0x00000000000009b4                . = ALIGN (0x4)
-                0x00000000000009b4                _end_data_flash = .
+                0x00000000000008d4                . = ALIGN (0x4)
+                0x00000000000008d4                _end_data_flash = .
 
-.vfp11_veneer   0x00000000000009b4        0x0
+.vfp11_veneer   0x00000000000008d4        0x0
  .vfp11_veneer  0x0000000000000000        0x0 linker stubs
 
-.v4_bx          0x00000000000009b4        0x0
+.v4_bx          0x00000000000008d4        0x0
  .v4_bx         0x0000000000000000        0x0 linker stubs
 
-.iplt           0x00000000000009b4        0x0
- .iplt          0x0000000000000000        0x0 obj/blinky.o
+.iplt           0x00000000000008d4        0x0
+ .iplt          0x0000000000000000        0x0 obj/crt0.o
 
-.rel.dyn        0x00000000000009b4        0x0
- .rel.iplt      0x0000000000000000        0x0 obj/blinky.o
+.rel.dyn        0x00000000000008d4        0x0
+ .rel.iplt      0x0000000000000000        0x0 obj/crt0.o
 
 .RAMVectorTable
  *(.RAMVectorTable)
-                0x00000000000009b4                . = ALIGN (0x4)
-                0x00000000000009b4                PROVIDE (__exidx_start, .)
+                0x00000000000008d4                . = ALIGN (0x4)
+                0x00000000000008d4                PROVIDE (__exidx_start, .)
 
 .ARM.exidx
  *(.ARM.exidx* .gnu.linkonce.armexidx.*)
-                0x00000000000009b4                PROVIDE (__exidx_end, .)
+                0x00000000000008d4                PROVIDE (__exidx_end, .)
 
-.data           0x000000001fff8000        0x0 load address 0x00000000000009b4
-                0x00000000000009b4                _start_data_flash = LOADADDR (.data)
+.data           0x000000001fff8000        0x0 load address 0x00000000000008d4
+                0x00000000000008d4                _start_data_flash = LOADADDR (.data)
                 0x000000001fff8000                _start_data = .
  *(.data)
- .data          0x000000001fff8000        0x0 obj/blinky.o
  .data          0x000000001fff8000        0x0 obj/crt0.o
  .data          0x000000001fff8000        0x0 obj/sysinit.o
  *(.data.*)
  *(.shdata)
                 0x000000001fff8000                _end_data = .
 
-.igot.plt       0x000000001fff8000        0x0 load address 0x00000000000009b4
- .igot.plt      0x0000000000000000        0x0 obj/blinky.o
+.igot.plt       0x000000001fff8000        0x0 load address 0x00000000000008d4
+ .igot.plt      0x0000000000000000        0x0 obj/crt0.o
                 0x000000001fff8000                . = ALIGN (0x4)
                 0x0000000000000000                _data_size = (_end_data - _start_data)
 
@@ -194,9 +190,8 @@ LOAD obj/sysinit.o
  *(.noinit.*)
                 0x000000001fff8000                _start_bss = .
 
-.bss            0x000000001fff8000       0x10 load address 0x00000000000009b4
+.bss            0x000000001fff8000       0x10 load address 0x00000000000008d4
  *(.bss)
- .bss           0x000000001fff8000        0x0 obj/blinky.o
  .bss           0x000000001fff8000        0x0 obj/crt0.o
  .bss           0x000000001fff8000       0x10 obj/sysinit.o
                 0x000000001fff8000                mcg_clk_hz
@@ -215,49 +210,38 @@ LOAD obj/sysinit.o
  *(.eh_*)
                 0x000000001fff8010                _end = .
                 0x000000001fff8010                PROVIDE (end, .)
-OUTPUT(blinky.elf elf32-littlearm)
-
-.debug_info     0x0000000000000000      0x82c
- .debug_info    0x0000000000000000      0x242 obj/blinky.o
- .debug_info    0x0000000000000242      0x5ea obj/sysinit.o
-
-.debug_abbrev   0x0000000000000000      0x250
- .debug_abbrev  0x0000000000000000       0xde obj/blinky.o
- .debug_abbrev  0x00000000000000de      0x172 obj/sysinit.o
-
-.debug_aranges  0x0000000000000000       0x40
- .debug_aranges
-                0x0000000000000000       0x20 obj/blinky.o
- .debug_aranges
-                0x0000000000000020       0x20 obj/sysinit.o
-
-.debug_line     0x0000000000000000      0x4cc
- .debug_line    0x0000000000000000      0x1f1 obj/blinky.o
- .debug_line    0x00000000000001f1      0x2db obj/sysinit.o
-
-.debug_str      0x0000000000000000      0x44c
- .debug_str     0x0000000000000000      0x1c7 obj/blinky.o
-                                        0x214 (size before relaxing)
- .debug_str     0x00000000000001c7      0x285 obj/sysinit.o
-                                        0x3fc (size before relaxing)
-
-.comment        0x0000000000000000       0x70
- .comment       0x0000000000000000       0x70 obj/blinky.o
-                                         0x71 (size before relaxing)
- .comment       0x0000000000000000       0x71 obj/sysinit.o
+OUTPUT(bin/blinky.elf elf32-littlearm)
 
 .ARM.attributes
-                0x0000000000000000       0x31
+                0x0000000000000000       0x2f
  .ARM.attributes
-                0x0000000000000000       0x33 obj/blinky.o
+                0x0000000000000000       0x21 obj/crt0.o
  .ARM.attributes
-                0x0000000000000033       0x21 obj/crt0.o
- .ARM.attributes
-                0x0000000000000054       0x33 obj/sysinit.o
+                0x0000000000000021       0x33 obj/sysinit.o
 
-.debug_frame    0x0000000000000000       0xa8
- .debug_frame   0x0000000000000000       0x2c obj/blinky.o
- .debug_frame   0x000000000000002c       0x7c obj/sysinit.o
+.comment        0x0000000000000000       0x70
+ .comment       0x0000000000000000       0x70 obj/sysinit.o
+                                         0x71 (size before relaxing)
+
+.debug_info     0x0000000000000000      0x5ea
+ .debug_info    0x0000000000000000      0x5ea obj/sysinit.o
+
+.debug_abbrev   0x0000000000000000      0x172
+ .debug_abbrev  0x0000000000000000      0x172 obj/sysinit.o
+
+.debug_aranges  0x0000000000000000       0x20
+ .debug_aranges
+                0x0000000000000000       0x20 obj/sysinit.o
+
+.debug_line     0x0000000000000000      0x2db
+ .debug_line    0x0000000000000000      0x2db obj/sysinit.o
+
+.debug_str      0x0000000000000000      0x397
+ .debug_str     0x0000000000000000      0x397 obj/sysinit.o
+                                        0x3fc (size before relaxing)
+
+.debug_frame    0x0000000000000000       0x7c
+ .debug_frame   0x0000000000000000       0x7c obj/sysinit.o
 
 Cross Reference Table
 
@@ -377,10 +361,8 @@ _start_data_flash                                 obj/crt0.o
 _startup                                          obj/crt0.o
 _top_stack                                        obj/crt0.o
 core_clk_khz                                      obj/sysinit.o
-main                                              obj/blinky.o
-                                                  obj/sysinit.o
+main                                              obj/sysinit.o
 mcg_clk_hz                                        obj/sysinit.o
-                                                  obj/blinky.o
 mcg_clk_khz                                       obj/sysinit.o
 periph_clk_khz                                    obj/sysinit.o
 pll_init                                          obj/sysinit.o
